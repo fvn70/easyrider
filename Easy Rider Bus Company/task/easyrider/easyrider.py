@@ -21,21 +21,22 @@ def check(k, v):
 
 suff = 'Avenue Boulevard Road Street'
 errs = {"bus_id": 0, "stop_id": 0, "stop_name": 0, "next_stop": 0, "stop_type": 0, "a_time": 0}
-flds = ['stop_name', 'stop_type', 'a_time']
+lines = {}
 
 
 def main():
     json_str = input()
     dics = json.loads(json_str)
-    cnt = 0
     for el in dics:
-        for k in flds:
-            if not check(k, el[k]):
-                errs[k] += 1
-                cnt += 1
-    print(f"Format validation: {cnt} errors")
-    for k in flds:
-        print(f"{k}: {errs[k]}")
+        for k, v in el.items():
+            if k == 'bus_id':
+                if v in lines:
+                    lines[v] += 1
+                else:
+                    lines[v] = 1
+    print('Line names and number of stops:')
+    for k in lines:
+        print(f"bus_id: {k}, stops: {lines[k]}")
 
 
 if __name__ == '__main__':
