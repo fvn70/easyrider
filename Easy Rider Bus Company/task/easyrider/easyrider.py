@@ -8,19 +8,20 @@ def check(k, v):
     if k == 'stop_name':
         if v == '' or type(v) != type('a'):
             return False
-        # sn = v.split()
-        # rez = len(sn) > 1 and sn[0][0].isupper() and sn[-1] in suff
-        # return rez
+        sn = v.split()
+        rez = len(sn) > 1 and sn[0][0].isupper() and sn[-1] in suff
+        return rez
     if k == 'stop_type':
         rez = type(v) == type('a') and v == '' or v in ['S', 'O', 'F']
         return rez
     if k == 'a_time':
-        return type(v) == type('a') and re.match(r'[0-2][0-9]:\d\d', v) != None
+        return type(v) == type('a') and re.match(r'([0][1-9]|[1-2][0-9]):[0-5]\d$', v) != None
     return True
 
 
 suff = 'Avenue Boulevard Road Street'
 errs = {"bus_id": 0, "stop_id": 0, "stop_name": 0, "next_stop": 0, "stop_type": 0, "a_time": 0}
+flds = ['stop_name', 'stop_type', 'a_time']
 
 
 def main():
@@ -28,12 +29,12 @@ def main():
     dics = json.loads(json_str)
     cnt = 0
     for el in dics:
-        for k, v in el.items():
-            if not check(k, v):
+        for k in flds:
+            if not check(k, el[k]):
                 errs[k] += 1
                 cnt += 1
-    print(f"Type and required field validation: {cnt} errors")
-    for k in errs:
+    print(f"Format validation: {cnt} errors")
+    for k in flds:
         print(f"{k}: {errs[k]}")
 
 
